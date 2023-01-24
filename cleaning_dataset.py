@@ -43,7 +43,3 @@ labels_story_50 = labels_story_50.iloc[131310:]
 labels_story_50.apply(lambda row: row_handler(row), axis=1)
 
 print(df_ok_rows)
-
-print("Saving the dataframe ...")
-
-df_ok_rows.to_csv("/Users/matthewpopov/Desktop/ok_rows.csv")
