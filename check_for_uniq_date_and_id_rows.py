@@ -26,10 +26,21 @@ procentage = pd.read_csv("/Users/nikolamuravev/Desktop/milk_catalogs_items_with_
                         on_bad_lines="skip")
 procentage.reset_index(drop=True)
 
-new_df = pd.DataFrame(columns=["date", "item_id", "day_of_week", "is_day_off", "procentage", "number_of_sales"])
+new_df = pd.DataFrame(columns=["date", "item_id", "day_of_week", "is_day_off", "season", "procentage", "number_of_sales"])
 is_exist_new_df = 0
 counter = 0
 
+def season_check(month):
+    global season
+    if (month < 3 or month == 12):
+        season = 1
+    elif (month > 2 and month < 6):
+        season = 2
+    elif (month > 5 and month < 9):
+        season = 3
+    elif (month > 8 and month < 12):
+        season = 4
+    return season
 
 def row_handler(row):
     global is_exist_new_df, counter
@@ -40,6 +51,7 @@ def row_handler(row):
     day = int(new_date.split("-")[2])
     day_of_week = date(year, month, day).isoweekday()
     is_day_of = (req.get(f"https://isdayoff.ru/api/getdata?year={year}&month={month}&day={day}")).text
+    season = season_check(month)
 
     labels_row_check = labels.loc[labels["id"] == new_id]   #begin to conection labels and milk_items tables
     new_id_of_item = labels_row_check["item_id"].item()
@@ -48,7 +60,7 @@ def row_handler(row):
     new_procentage_of_item = procentage_row_check["procentage"].item()
 
     if is_exist_new_df == 0:
-        new_df.loc[len(new_df)] = [new_date, new_id_of_item, day_of_week, is_day_of, new_procentage_of_item, 1]
+        new_df.loc[len(new_df)] = [new_date, new_id_of_item, day_of_week, is_day_of, season, new_procentage_of_item, 1]
         is_exist_new_df = 1
     else:
         uniq_check = new_df.loc[(new_df["date"] == new_date) & (new_df["item_id"] == new_id_of_item)]
@@ -57,7 +69,7 @@ def row_handler(row):
             uniq_index = int(str(uniq_check["date"]).split("    ")[0])
             new_df.loc[uniq_index, "number_of_sales"] += 1
         else:
-            new_df.loc[len(new_df)] = [new_date, new_id_of_item, day_of_week, is_day_of, new_procentage_of_item, 1]
+            new_df.loc[len(new_df)] = [new_date, new_id_of_item, day_of_week, is_day_of, season, new_procentage_of_item, 1]
     counter += 1
     print("checked rows: ", counter)
 
