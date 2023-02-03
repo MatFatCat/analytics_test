@@ -1,4 +1,5 @@
-
+import pandas as pd
 
 if __name__ == "__main__":
-    print("Main file...")
+    df = pd.DataFrame()
+    df.to_csv("dataset.csv")
