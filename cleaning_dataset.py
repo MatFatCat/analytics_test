@@ -1,10 +1,10 @@
 import pandas as pd
 
-labels = pd.read_csv("/Users/matthewpopov/Desktop/tables/all_labels.csv", encoding="cp1252",
+labels = pd.read_csv("/Users/nikolamuravev/Desktop/analytics_test/all/all.csv", encoding="cp1252",
                      on_bad_lines="skip")
-labels_story_50 = pd.read_csv("/Users/matthewpopov/Desktop/tables/all_history.csv", encoding="utf-8",
+labels_story_50 = pd.read_csv("/Users/nikolamuravev/Desktop/analytics_test/test/history/all_history.csv", encoding="utf-8",
                               on_bad_lines="skip")
-catalogs_items = pd.read_csv("/Users/matthewpopov/Desktop/tables/catalogs_items.csv", encoding="utf-8",
+catalogs_items = pd.read_csv("/Users/nikolamuravev/Desktop/analytics_test/milk_catalogs_items.csv", encoding="utf-8",
                              on_bad_lines="skip")
 ok_rows_counter = 0
 counter = 0
@@ -31,7 +31,7 @@ def row_handler(row):
         print(f"NAME = [{name}] | DESCRIPTION = [{ok_rows_counter}]")
 
         df_ok_rows.loc[len(df_ok_rows)] = row
-        df_ok_rows.to_csv("/Users/matthewpopov/Desktop/ok_rows.csv")
+        df_ok_rows.to_csv("/Users/nikolamuravev/Desktop/ok_rows.csv")
 
     counter += 1
 
