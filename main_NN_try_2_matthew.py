@@ -7,7 +7,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-numeric_features = ["procentage", "tavg"]
+numeric_features = ["procentage"]
 
 PATH = "/Users/matthewpopov/Desktop/clean_database/dataset.csv"
 
@@ -19,8 +19,6 @@ X = df.drop(["item_id", "number_of_sales", "date", "Unnamed: 0", "is_day_off", "
 y = df["number_of_sales"]
 
 X = pd.get_dummies(X, columns=["product_type", "day_of_week_number"])
-
-print(X)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.15, random_state=40)
 
@@ -41,4 +39,6 @@ pred_data["y_pred"] = np.abs(pred)
 
 print(mean_absolute_error(y_test, np.abs(pred)))
 
-pred_data.to_csv("/Users/matthewpopov/Desktop/clean_database/pred-2.csv")
+print(pred_data["tavg"])
+
+pred_data.to_csv("/Users/matthewpopov/Desktop/clean_database/pred.csv")
