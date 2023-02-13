@@ -1,22 +1,122 @@
-import time
-import requests as req
 import pandas as pd
-from datetime import datetime
+from imblearn.over_sampling import SMOTENC
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 
 
-def row_handler(row): return datetime.strptime(row["date"], '%Y-%m-%d').weekday()
+from imblearn.over_sampling import SMOTENC, SMOTE
 
 
-PATH = "/Users/matthewpopov/Desktop/clean_database/dataset.csv"
+def col_ins(df, features):
+    # column names to indices
+    return [df.columns.get_loc(col) for col in features]
 
-df = pd.read_csv(PATH, encoding="utf-8")
 
-df = df.drop(["Unnamed: 0", "Unnamed: 0.1"], axis=1)
+def smote_nc(X, y, cat_var_ins):
+    sm = SMOTENC(random_state=42, categorical_features=cat_var_ins)
+    return sm.fit_sample(X, y)
 
-print(df)
 
-df["day_of_week_number"] = df.apply(lambda row: row_handler(row), axis=1)
+def df_smote_nc(df, dep_var, cat_var):
+    y = df[dep_var]
+    X = df.drop(dep_var, axis=1)
+    cat_var_ins = col_ins(X, cat_var)
 
-print(df)
+    # smotenc
+    X_res, y_res = smote_nc(X, y, cat_var_ins)
 
-df.to_csv("/Users/matthewpopov/Desktop/clean_database/dataset.csv")
+    # back to DataFrame (SMOTENC uses numpy)
+    X_res = pd.DataFrame(X_res, columns=X.columns)
+    y_res = pd.DataFrame(y_res, columns=[dep_var])
+    df_res = y_res.merge(X_res, left_index=True, right_index=True)
+
+    # set dtypes (which are lost when SMOTENC uses numpy)
+    df_res = df_res.astype((df_res.dtypes))
+
+    return df_res
+
+
+classification_dataset = pd.read_csv("/Users/matthewpopov/Desktop/clean_database/classification_dataset.csv",
+                                     encoding="utf-8")
+
+classification_dataset = classification_dataset.drop(["Unnamed: 0"], axis=1)
+
+#  ['date', 'item_id', 'procentage', 'number_of_sales', 'tavg', 'season', 'day_of_week_cos',
+#  'product_type', 'day_of_month', 'month', 'day_of_week', 'is_day_off', 'is_anomaly']
+
+numerical_features = ["procentage", "tavg", "number_of_sales"]
+categorical_features = ["season", "product_type", "day_of_month", "month", "day_of_week",
+                      "is_anomaly"]
+
+needed_features = numerical_features + categorical_features
+
+# scaler = StandardScaler()
+#
+# scaled_num_features = pd.DataFrame(scaler.fit_transform(classification_dataset[numerical_features]),
+#                                    columns=numerical_features)
+#
+# classification_dataset[numerical_features] = scaled_num_features
+
+X = classification_dataset[needed_features]
+
+y = X["is_anomaly"]
+
+X = pd.get_dummies(X, columns=categorical_features)
+
+categorical_features = ['season_1', 'season_2', 'season_3', 'season_4', 'product_type_ДРУГОЕ',
+                        'product_type_ЙОГУРТ', 'product_type_КЕФИР', 'product_type_МАСЛО', 'product_type_МОЛОКО',
+                        'product_type_МОРОЖЕНОЕ', 'product_type_СЛИВКИ', 'product_type_СЫР', 'product_type_ТВОРОГ',
+                        'day_of_month_1', 'day_of_month_2', 'day_of_month_3', 'day_of_month_4', 'day_of_month_6',
+                        'day_of_month_7', 'day_of_month_8', 'day_of_month_9', 'day_of_month_10', 'day_of_month_11',
+                        'day_of_month_12', 'day_of_month_13', 'day_of_month_14', 'day_of_month_15', 'day_of_month_16',
+                        'day_of_month_17', 'day_of_month_18', 'day_of_month_19', 'day_of_month_26', 'day_of_month_28',
+                        'day_of_month_29', 'day_of_month_30', 'day_of_month_31', 'month_2', 'month_3', 'month_4',
+                        'month_5', 'month_6', 'month_7', 'month_8', 'month_10', 'month_11', 'month_12', 'day_of_week_1',
+                        'day_of_week_2', 'day_of_week_3', 'day_of_week_4', 'day_of_week_5', 'day_of_week_6',
+                        'day_of_week_7', 'is_anomaly_1']
+
+
+smoteNC = SMOTENC(categorical_features=col_ins(X, categorical_features), random_state=42)
+
+X_resampled, y_resempled = smoteNC.fit_resample(X, y)
+
+
+X_resampled = X_resampled.sample(frac=1)
+
+print(X_resampled)
+
+X_resampled.to_csv("/Users/matthewpopov/Desktop/clean_database/resampled_df.csv")
+
+
+# plt.hist(classification_dataset["is_anomaly"])
+# plt.show()
+#
+# plt.hist(X_resampled["is_anomaly_1"])
+# plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# X = classification_dataset[needed_features]
+# y = classification_dataset["number_of_sales"]
+#
+# smoteNC = SMOTENC(categorical_features=col_ins(X, categorical_features), random_state=42, k_neighbors=3)
+# X_resampled, y_resempled = smoteNC.fit_resample(X, y)
+# # X_2, y_2 = SMOTE(categorical_features=col_ins(X, categorical_features))
+#
+# print(X_resampled, y_resempled)
+
+
+
+
