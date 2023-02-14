@@ -13,30 +13,6 @@ def col_ins(df, features):
     return [df.columns.get_loc(col) for col in features]
 
 
-def smote_nc(X, y, cat_var_ins):
-    sm = SMOTENC(random_state=42, categorical_features=cat_var_ins)
-    return sm.fit_sample(X, y)
-
-
-def df_smote_nc(df, dep_var, cat_var):
-    y = df[dep_var]
-    X = df.drop(dep_var, axis=1)
-    cat_var_ins = col_ins(X, cat_var)
-
-    # smotenc
-    X_res, y_res = smote_nc(X, y, cat_var_ins)
-
-    # back to DataFrame (SMOTENC uses numpy)
-    X_res = pd.DataFrame(X_res, columns=X.columns)
-    y_res = pd.DataFrame(y_res, columns=[dep_var])
-    df_res = y_res.merge(X_res, left_index=True, right_index=True)
-
-    # set dtypes (which are lost when SMOTENC uses numpy)
-    df_res = df_res.astype((df_res.dtypes))
-
-    return df_res
-
-
 classification_dataset = pd.read_csv("/Users/matthewpopov/Desktop/clean_database/classification_dataset.csv",
                                      encoding="utf-8")
 
