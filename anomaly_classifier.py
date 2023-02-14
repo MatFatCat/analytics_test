@@ -8,13 +8,13 @@ import matplotlib.pyplot as plt
 def get_classifier():
     df = pd.read_csv("/Users/matthewpopov/Desktop/clean_database/resampled_classification_df.csv", encoding="utf-8")
 
-    X = df.drop(["Unnamed: 0", "is_anomaly"], axis=1)
+    X = df.drop(["Unnamed: 0", "is_anomaly", "number_of_sales"], axis=1)
 
     y = df["is_anomaly"]
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.35, random_state=20)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=20)
 
-    model = XGBClassifier(n_estimators=20, max_depth=3)
+    model = XGBClassifier(n_estimators=100, max_depth=7)
 
     model.fit(X_train, y_train)
 
