@@ -31,5 +31,7 @@ print(X_test)
 
 print(accuracy_score(y_test, prediction))
 
+model.save_model("/Users/matthewpopov/Desktop/clean_database/models/anomaly_classifier.json")
+
 
 

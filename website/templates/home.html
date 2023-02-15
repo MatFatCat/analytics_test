@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Input Form</title>
+  </head>
+  <body>
+
+    <form method="POST">
+      <h4>Тип продукции (Молоко, творог и т д):</h4>
+      <input type="text" name="product_type" id="product_type" />
+      <h4>Процент жирности продукта(например, 45):</h4>
+      <input type="text" name="procentage" id="procentage" />
+      <h4>Год(например, 2023):</h4>
+      <input type="text" name="year" id="year" />
+      <h4>Месяц(1 ... 12):</h4>
+      <input type="text" name="month" id="month" />
+      <h4>Число месяца(1 ... 31):</h4>
+      <input type="text" name="day_of_month" id="day_of_month" />
+      <h4>День недели(Понедельник ... воскресенье):</h4>
+      <input type="text" name="day_of_week" id="day_of_week" />
+
+      <div>
+        <button type="submit">Get prediction</button>
+      </div>
+      {% if prediction != 0 %}
+        <h1>Предсказанное количество продаж:</h1>
+        <h1>{{ prediction }}</h1>
+      {% endif %}
+    </form>
+
+  </body>
+</html>

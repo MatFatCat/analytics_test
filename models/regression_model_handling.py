@@ -37,9 +37,9 @@ def describe_model(path, name_of_model, n_estimators, max_depth, test_size, rand
     print(f"{name_of_model}'s MAE = {mean_absolute_error(y_test, np.abs(pred))}")
 
     if name_of_model == "Big Sales Model":
-        model.save_model("/Users/matthewpopov/Desktop/clean_database/models/big_sales_regression_model.txt")
+        model.save_model("/Users/matthewpopov/Desktop/clean_database/models/big_sales_regression_model.json")
     elif name_of_model == "Small Sales Model":
-        model.save_model("/Users/matthewpopov/Desktop/clean_database/models/small_sales_regression_model.txt")
+        model.save_model("/Users/matthewpopov/Desktop/clean_database/models/small_sales_regression_model.json")
 
 
 describe_model("/Users/matthewpopov/Desktop/clean_database/resampled_small_sales_df.csv", "Small Sales Model", 5000, 15, 0.1,
