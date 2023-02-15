@@ -60,39 +60,15 @@ X_resampled, y_resempled = smoteNC.fit_resample(X, y)
 
 X_resampled = X_resampled.sample(frac=1)
 
-print(X_resampled)
 
-X_resampled.to_csv("/Users/matthewpopov/Desktop/clean_database/resampled_df.csv")
+df = pd.read_csv("/Users/matthewpopov/Desktop/clean_database/resampled_df.csv", encoding="utf-8")
 
+df = df.drop(["Unnamed: 0"], axis=1)
 
-# plt.hist(classification_dataset["is_anomaly"])
-# plt.show()
-#
-# plt.hist(X_resampled["is_anomaly_1"])
-# plt.show()
+print(df)
 
+big_sales = df.loc[df["number_of_sales"] > 100]
 
+print(big_sales)
 
-
-
-
-
-
-
-
-
-
-
-
-# X = classification_dataset[needed_features]
-# y = classification_dataset["number_of_sales"]
-#
-# smoteNC = SMOTENC(categorical_features=col_ins(X, categorical_features), random_state=42, k_neighbors=3)
-# X_resampled, y_resempled = smoteNC.fit_resample(X, y)
-# # X_2, y_2 = SMOTE(categorical_features=col_ins(X, categorical_features))
-#
-# print(X_resampled, y_resempled)
-
-
-
-
+big_sales.to_csv("/Users/matthewpopov/Desktop/clean_database/resampled_big_sales_df.csv")

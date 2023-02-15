@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 
 def get_classifier():
-    df = pd.read_csv("/Users/matthewpopov/Desktop/clean_database/resampled_classification_df.csv", encoding="utf-8")
+    df = pd.read_csv("/Users/matthewpopov/Desktop/clean_database/resampled_df.csv", encoding="utf-8")
 
     X = df.drop(["Unnamed: 0", "is_anomaly", "number_of_sales"], axis=1)
 
