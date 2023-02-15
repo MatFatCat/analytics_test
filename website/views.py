@@ -16,15 +16,14 @@ def home():
         year = request.form.get("year")
         month = request.form.get("month")
         day_of_month = request.form.get("day_of_month")
-        day_of_week = request.form.get("day_of_week")
         procentage = request.form.get("procentage")
 
-        prediction = get_prediction(product_type, procentage, year, month, day_of_month, day_of_week)
+        prediction = get_prediction(product_type, procentage, year, month, day_of_month)
 
     return render_template("home.html", prediction=prediction[0])
 
 
-def _data_preprocessing(product_type, procentage, year, month, day_of_month, day_of_week):
+def _data_preprocessing(product_type, procentage, year, month, day_of_month):
     year = int(year)
     procentage = float(procentage)
     month = int(month)
@@ -33,8 +32,7 @@ def _data_preprocessing(product_type, procentage, year, month, day_of_month, day
     new_product_type = product_type
     season = -1
     types = ["ЙОГУРТ", "КЕФИР", "МАСЛО", "МОЛОКО", "МОРОЖЕНОЕ", "СЛИВКИ", "СМЕТАНА", "СЫР", "ТВОРОГ"]
-    days_of_week = ["ПОНЕДЕЛЬНИК", "ВТОРНИК", "СРЕДА", "ЧЕТВЕРГ", "ПЯТНИЦА", "СУББОТА", "ВОСКРЕСЕНЬЕ"]
-    day_of_week = days_of_week.index(day_of_week.upper()) + 1
+    day_of_week = datetime(year, month, day_of_month).weekday() + 1
 
     if product_type.upper() not in types:
         new_product_type = "ДРУГОЕ"
@@ -89,7 +87,7 @@ def _data_preprocessing(product_type, procentage, year, month, day_of_month, day
     return X.iloc[[0]]
 
 
-def get_prediction(product_type, procentage, year, month, day_of_month, day_of_week):
+def get_prediction(product_type, procentage, year, month, day_of_month):
     BIG_PATH = "/Users/matthewpopov/Desktop/analytics_test/models_dumps/big_sales_regression_model.json"
     SMALL_PATH = "/Users/matthewpopov/Desktop/analytics_test/models_dumps/small_sales_regression_model.json"
     ANOMALY_PATH = "/Users/matthewpopov/Desktop/analytics_test/models_dumps/anomaly_classifier.json"
@@ -102,7 +100,7 @@ def get_prediction(product_type, procentage, year, month, day_of_month, day_of_w
     small_sales_regression_model.load_model(SMALL_PATH)
     anomaly_classifier_model.load_model(ANOMALY_PATH)
 
-    X = _data_preprocessing(product_type, procentage, year, month, day_of_month, day_of_week)
+    X = _data_preprocessing(product_type, procentage, year, month, day_of_month)
     is_anomaly = anomaly_classifier_model.predict(X)
 
     if is_anomaly[0] == 1:
