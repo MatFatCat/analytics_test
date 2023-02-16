@@ -1,3 +1,4 @@
+import pickle
 from flask import Blueprint, render_template, request, flash, jsonify
 import pandas as pd
 import xgboost
@@ -88,17 +89,10 @@ def _data_preprocessing(product_type, procentage, year, month, day_of_month):
 
 
 def get_prediction(product_type, procentage, year, month, day_of_month):
-    BIG_PATH = "/Users/matthewpopov/Desktop/analytics_test/models_dumps/big_sales_regression_model.json"
-    SMALL_PATH = "/Users/matthewpopov/Desktop/analytics_test/models_dumps/small_sales_regression_model.json"
-    ANOMALY_PATH = "/Users/matthewpopov/Desktop/analytics_test/models_dumps/anomaly_classifier.json"
 
-    big_sales_regression_model = xgboost.XGBRegressor()
-    small_sales_regression_model = xgboost.XGBRegressor()
-    anomaly_classifier_model = xgboost.XGBClassifier()
-
-    big_sales_regression_model.load_model(BIG_PATH)
-    small_sales_regression_model.load_model(SMALL_PATH)
-    anomaly_classifier_model.load_model(ANOMALY_PATH)
+    big_sales_regression_model = pickle.load(open("big_sales_model.pkl", "rb"))
+    small_sales_regression_model = pickle.load(open("small_sales_model.pkl", "rb"))
+    anomaly_classifier_model = pickle.load(open("classification_model.pkl", "rb"))
 
     X = _data_preprocessing(product_type, procentage, year, month, day_of_month)
     is_anomaly = anomaly_classifier_model.predict(X)

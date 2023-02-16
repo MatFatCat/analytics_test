@@ -3,6 +3,7 @@ from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, f1_score
 import matplotlib.pyplot as plt
+import pickle
 
 
 def get_classifier():
@@ -31,7 +32,6 @@ print(X_test)
 
 print(accuracy_score(y_test, prediction))
 
-model.save_model("/Users/matthewpopov/Desktop/clean_database/models/anomaly_classifier.json")
-
+pickle.dump(model, open('classification_model.pkl', 'wb'))
 
 
