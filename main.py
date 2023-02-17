@@ -131,3 +131,4 @@ def get_tavg(day, month, year):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
